@@ -1,0 +1,150 @@
+feature_name
+age
+gender
+Q1_Residence_Ireland
+Q2_residence_outside_Ireland
+Q3_Outdoor_hobbies
+Q4_Chronic_previous
+Q5_tick_bite
+Q6_tick_bite_when
+Q9_GP
+Q9a_GP_satisfaction
+Q10_Consultant
+Q10a_consultant_satisfaction
+Q11_Number_doc
+Q12_trt_care_rate
+Working
+Sick Leave
+Retired
+Caring res
+Unemplo
+Other_empl
+Q14_Impact_symp_employment
+Q15 Bulls Eye
+Q16. Rash
+Q17. Sweats
+Q18 Sore throat
+Q19. Headac
+Q20. Swglands
+Q21. Sev Fat
+T0_severe_fatigue_rate
+T0_symp_today_rate
+Q24. Chest P.
+Q25. ShortB
+Q26. Palpit
+Q27. Lighthead.
+Q28. JointP
+Q29.Moving
+Q30. Intensity
+Q31. JointSw
+Q32. MuscW.le
+Q33.MuscP
+T0_muscle_pain_rate
+Q35Facial
+Q36ArmHan
+Q37Numbn
+Q38Concen
+Q39Sleep
+Q40Vision
+Q41. Neck
+Q42Tinnit
+Q43Person
+Q44Mood
+T0_mood_rate
+Q46Anger
+Q47Anxiety
+Q48_blood_analysis
+Q50_antibiotic
+Q52_antib_duration
+Q53_antib_symp_improv
+Q54_alternative_trt
+Q55_alternative_trt_success
+b.burg+afz+gar.IgG
+b.burg+afz+gar+IgM
+B.Burg Round Body IgG
+B.Burg Round body IgM
+BaB M IgG
+BaB M IgM
+Bart H IgG
+Bart H IgM
+Ehrl C IgG
+Ehrl IgM
+Rick Ak IgG
+Rick Ak IgM
+Coxs IgG
+Coxs IgM
+Epst B IgG
+Epst B IgM
+Hum Par IgG
+Hum Par IgM
+Mycop Pneu IgG
+Mycop Pneu IgM
+BB Full Anti
+BB Osp Mix
+BBLFA
+NVRLIgG
+CD3%
+CD3Total
+CD8%
+CD8-Suppr
+CD4%
+CD4-Helper
+CD19Bcell
+CD19%
+H/SRATIO
+CD57+NKCELLS
+IgG
+IgA
+IgM
+HgB
+Platelets
+neutrophils
+Lymphocytes
+WCC
+RF
+CRP
+Iron
+Transf
+%transsat
+Ferritin
+Folate
+CK
+FT4
+TSH
+Cefuroxime_dose
+Rifampicin_dose
+Lymecyclin_dose
+LDN_dose
+Melatonin_dose
+skin_symp
+num_skin_symp
+general_wellbeing_symp
+num_general_wellbeing_symp
+cardiac_symp
+num_cardiac_symp
+rheumatological_symp
+num_rheumatological_symp
+neurological_symp
+num_neurological_symp
+psychological_symp
+num_psychological_symp
+num_total_symptoms
+borrelia_elispot
+num_borrelia_elispot_pos
+IgG_total
+IgM_total
+sero_tested_count
+num_positive_markers
+cluster_bburg
+cluster_babesia
+cluster_bartonella
+cluster_ehrlichia
+cluster_rickettsia
+cluster_coxsackie
+cluster_ebv
+cluster_parvo
+cluster_mycoplasma
+blood_G
+blood_UK
+blood_USA
+num_antibiotics_administered
