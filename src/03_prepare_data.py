@@ -1,10 +1,22 @@
 """
-Converted from notebook: 3_prepare_data.ipynb
-"""
+Data Preparation for Feature Selection
 
-"""
-CORRECTED Data Preparation for Feature Selection
-Fixes all data leakage issues identified in audit
+Parameters
+----------
+df_binary_path : str
+    Path to the outcome-defined binary dataset (high vs non responders)
+output_folder : str
+    Where to save dataset.csv, labels.csv, feature_names.csv
+
+Returns
+-------
+X : np.ndarray
+    Feature matrix (with NaN for missing values)
+y : np.ndarray
+    Labels (0=non-responder, 1=high-responder)
+feature_names : list
+    Names of features in X
+    
 """
 
 import os
@@ -17,30 +29,7 @@ def prepare_data_for_feature_selection(
     coerce_all_features_to_numeric=True,
     drop_all_nan_columns=True
 ):
-    """
-    Prepare clean dataset for feature selection with NO data leakage.
-    
-    CRITICAL FIXES:
-    1. Excludes ALL outcome-related features (T2, diff, z, composite, etc.)
-    2. Does NOT fill missing values (leaves as NaN, will be handled in CV)
-    3. Only includes baseline (T0) features and static patient characteristics
-    
-    Parameters
-    ----------
-    df_binary_path : str
-        Path to the outcome-defined binary dataset (high vs non responders)
-    output_folder : str
-        Where to save dataset.csv, labels.csv, feature_names.csv
-    
-    Returns
-    -------
-    X : np.ndarray
-        Feature matrix (with NaN for missing values)
-    y : np.ndarray
-        Labels (0=non-responder, 1=high-responder)
-    feature_names : list
-        Names of features in X
-    """
+  
     os.makedirs(output_folder, exist_ok=True)
     
     # Load outcome-defined dataset
@@ -99,7 +88,7 @@ def prepare_data_for_feature_selection(
     print(f"  Other outcome metadata: {len(outcome_related)}")
     
     # ============================================================
-    # Select candidate features (everything not excluded)
+    # Select candidate features 
     # ============================================================
     
     candidate_cols = [c for c in df.columns if c not in all_exclude]
@@ -128,14 +117,10 @@ def prepare_data_for_feature_selection(
     print(f"\nFinal feature count: {len(feature_cols)}")
     
     # ============================================================
-    # Extract feature matrix (KEEP NaN, don't fill!)
+    # Extract feature matrix 
     # ============================================================
     
     X = df[feature_cols].copy()
-    
-    # CRITICAL: Do NOT fill missing values here!
-    # Missing values will be imputed INSIDE cross-validation
-    # after train/test split to prevent leakage
     
     # Count missing values
     missing_counts = X.isna().sum()
@@ -161,22 +146,22 @@ def prepare_data_for_feature_selection(
             leaky_found.append(col)
     
     if leaky_found:
-        print("❌ LEAKAGE DETECTED - These features should be excluded:")
+        print("LEAKAGE DETECTED - These features should be excluded:")
         for f in leaky_found:
             print(f"  - {f}")
         raise ValueError("Data leakage detected! Fix exclusion list.")
     else:
-        print("✅ No outcome-related features found in feature set")
+        print("No outcome-related features found in feature set")
     
     # Check 2: All features are numeric
     non_numeric = [c for c in feature_cols if not pd.api.types.is_numeric_dtype(X[c])]
     if non_numeric:
-        print(f"⚠ WARNING: {len(non_numeric)} non-numeric features:")
+        print(f"WARNING: {len(non_numeric)} non-numeric features:")
         for f in non_numeric[:5]:
             print(f"  - {f}")
         print("These will cause errors in sklearn!")
     else:
-        print("✅ All features are numeric")
+        print("All features are numeric")
     
     # Check 3: Feature diversity
     n_continuous = sum(X[c].nunique() > 2 for c in feature_cols)
@@ -198,13 +183,12 @@ def prepare_data_for_feature_selection(
     # Save in Vendrow-compatible format
     # ============================================================
     
-    # Save dataset (with NaN, not filled!)
-    # Note: CSV will write NaN as empty strings by default
+    # Save dataset 
     X.to_csv(
         os.path.join(output_folder, "dataset.csv"), 
         index=False, 
         header=False,
-        na_rep='nan'  # Explicitly write 'nan' for missing values
+        na_rep='nan'  
     )
     
     # Save labels (Vendrow format: 1=non, 3=high)
@@ -236,7 +220,7 @@ def prepare_data_for_feature_selection(
     return X.values, y, feature_cols
 
 # ============================================================
-# USAGE EXAMPLE
+# USAGE
 # ============================================================
 
 if __name__ == "__main__":
@@ -246,29 +230,3 @@ if __name__ == "__main__":
         output_folder="../data/"
     )
     
-    print("\n" + "="*60)
-    print("READY FOR FEATURE SELECTION")
-    print("="*60)
-    print(f"Dataset prepared with {len(feature_names)} clean features")
-    print(f"No outcome information leaked")
-    print(f"Missing values preserved for proper CV imputation")
-    print("\nNext step: Run cross_validation.py or stability_top30.py")
-
-a = pd.read_pickle('../data/processed_features.pkl')
-
-# 1. Percentage of missing values per column
-missing_pct = a.isna().mean() * 100
-missing_pct = missing_pct.rename("missing_pct")
-
-# 2. Median per feature (numeric columns only)
-medians = a.median(numeric_only=True)
-medians = medians.rename("median")
-
-# 3. Combine into a single table
-summary = pd.concat([missing_pct, medians], axis=1)
-
-# Optional: sort by missingness
-summary = summary.sort_values("missing_pct", ascending=False)
-
-summary
-
