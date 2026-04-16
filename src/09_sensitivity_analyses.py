@@ -1,22 +1,11 @@
 """
-sensitivity_analyses.py
-========================
 Three sensitivity analyses for the Lyme disease ML paper:
 
-1. STABILITY THRESHOLD SENSITIVITY (§ requested by reviewer)
-   - Vary the feature selection threshold from 50% to 90%
-   - Report: n features, classification performance at each threshold
-   - Demonstrates robustness of the 70% choice
+1. STABILITY THRESHOLD SENSITIVITY 
 
-2. MISSINGNESS SENSITIVITY (§ requested by reviewer)
-   - Exclude high-missingness features (>30%, >50%) from stable set
-   - Re-evaluate classification performance
-   - Tests whether imputed features drive the results
+2. MISSINGNESS SENSITIVITY 
 
 3. TREATMENT DURATION CONFOUNDER CHECK
-   - Test if treatment duration (Q52_antib_duration) differs between groups
-   - Mann-Whitney U test between high responders and non-responders
-   - Provides evidence for/against confounding
 
 Outputs:
     ../results/sensitivity_analyses/
@@ -25,9 +14,6 @@ Outputs:
       ├── missingness_sensitivity.csv
       ├── treatment_duration_confounder.txt
       └── sensitivity_summary.txt
-
-Usage:
-    python sensitivity_analyses.py
 
 Requires same data files as 4_multifeature.py
 """
@@ -128,7 +114,7 @@ def load_continuous_idx(feature_names):
 
 
 # ============================================================
-# Imputation / scaling — identical to 4_multifeature.py
+# Imputation / scaling 
 # ============================================================
 def impute_missing(X_train, X_test, continuous_idx):
     X_train_imp = X_train.copy()
@@ -149,7 +135,7 @@ def impute_missing(X_train, X_test, continuous_idx):
 
 
 # ============================================================
-# Evaluation — simplified version of 4_multifeature.py
+# Evaluation 
 # ============================================================
 def evaluate_feature_set(X, y, feature_indices, continuous_idx_full, model_config, seed=42):
     """

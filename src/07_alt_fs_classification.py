@@ -1,6 +1,4 @@
 """
-alternative_fs_classification.py
-=================================
 Evaluates classification performance of feature sets selected by
 alternative methods (LASSO, Elastic Net, Random Forest, Combined),
 mirroring the cross-validation framework of the main Vendrow pipeline.
@@ -8,22 +6,11 @@ mirroring the cross-validation framework of the main Vendrow pipeline.
 Must be run AFTER alternative_feature_selection.py has produced
 stable feature CSVs in ../results/alternative_feature_selection/
 
-Design mirrors cross_validation.py exactly:
-  - 10-fold × 10-repetition stratified CV (100 fold-level observations)
-  - Same three classifiers: Linear SVM, k-NN, Decision Tree
-  - Fixed pre-specified hyperparameters (same as main pipeline)
-  - Same imputation and scaling logic
-  - Same metrics: Accuracy, AUC, Sensitivity, Specificity
-  - 95% bootstrap CIs (10,000 iterations)
-  - Paired statistical tests vs full feature set and random baseline
-
 Output:
   - ../results/alternative_feature_selection/classification_performance.csv
   - ../results/alternative_feature_selection/classification_stats.csv
   - ../results/alternative_feature_selection/classification_summary.txt
 
-Usage:
-    python alternative_fs_classification.py
 """
 
 import os
@@ -155,9 +142,6 @@ def impute_train_test(X_train, X_test, continuous_idx):
 def load_stable_features(csv_path: Path) -> np.ndarray:
     """
     Returns array of feature indices sorted by rank (ascending = best).
-    Handles different column naming conventions:
-      - alternative_feature_selection.py uses: feature_idx, mean_rank
-      - Vendrow pipeline may use: feature_index, consensus_rank, rank, etc.
     """
     df = pd.read_csv(csv_path)
 
@@ -599,51 +583,6 @@ def main():
     df_stats.to_csv(stats_path, index=False)
     print(f"\n  Saved: {stats_path}")
 
-    # ── Human-readable summary ─────────────────────────────────────────────
-    summary_path = ALT_FS_DIR / "classification_summary.txt"
-    with open(summary_path, "w") as f:
-        f.write("CLASSIFICATION PERFORMANCE — ALTERNATIVE FEATURE SELECTION METHODS\n")
-        f.write("=" * 70 + "\n\n")
-
-        f.write("PERFORMANCE TABLE\n")
-        f.write(df_perf.to_string(index=False))
-        f.write("\n\n")
-
-        f.write("PAIRED STATISTICAL COMPARISONS\n")
-        f.write(df_stats.to_string(index=False))
-        f.write("\n")
-
-    print(f"\n  Summary saved: {summary_path}")
-
-    # ── Final comparison table for the paper ──────────────────────────────
-    # Format: mirrors Table 3 in your paper
-    print("\n" + "=" * 70)
-    print("TABLE FOR PAPER (mirrors Table 3 format)")
-    print("=" * 70)
-
-    for clf_name in classifiers:
-        print(f"\n  {clf_name}")
-        print(f"  {'Method':<22} {'Acc [95% CI]':>20} {'AUC [95% CI]':>20} "
-              f"{'Sens':>6} {'Spec':>6}")
-        print("  " + "-" * 78)
-
-        for row in perf_rows:
-            if row["classifier"] != clf_name:
-                continue
-            if np.isnan(row.get("auc", np.nan)):
-                auc_str = "   —  [  —  ,  —  ]"
-            else:
-                auc_str = f"{row['auc']:.3f} [{row['auc_ci_lo']:.3f},{row['auc_ci_hi']:.3f}]"
-
-            print(f"  {row['method']:<22} "
-                  f"{row['accuracy']:.3f} [{row['acc_ci_lo']:.3f},{row['acc_ci_hi']:.3f}] "
-                  f"{auc_str} "
-                  f"{row['sensitivity'] if not np.isnan(row.get('sensitivity', np.nan)) else '  —':>6} "
-                  f"{row['specificity'] if not np.isnan(row.get('specificity', np.nan)) else '  —':>6}")
-
-    print("\n" + "=" * 70)
-    print("DONE — All outputs in:", ALT_FS_DIR)
-    print("=" * 70)
 
 
 if __name__ == "__main__":

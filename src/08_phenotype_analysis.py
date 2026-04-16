@@ -11,12 +11,6 @@ Methods:
 - Cohen's d effect size (weighted pooled SD)
 - Common language effect size
 
-CHANGES FROM PREVIOUS VERSION:
-  - Path updated to stability_analysis
-  - Label conversion consistent with cross_validation.py: np.where(y==1, 0, 1)
-  - Cohen's d uses weighted pooled SD: sqrt(((n1-1)*v1 + (n2-1)*v2) / (n1+n2-2))
-
-Run: python 6_phenotype_analysis.py
 """
 
 import numpy as np
@@ -43,7 +37,7 @@ try:
         feature_mapping['original_name'],
         feature_mapping['publication_name']
     ))
-    print("✓ Loaded feature name mapping from file")
+    print(" Loaded feature name mapping from file")
 except Exception:
     feature_names_publication = {
         # Demographics
@@ -264,14 +258,6 @@ def bh_fdr(pvals, alpha=0.05):
 
 def cohens_d(x1, x2):
     """Cohen's d with weighted pooled standard deviation.
-
-    Uses the standard Hedges-style pooled SD:
-        s_p = sqrt(((n1-1)*s1² + (n2-1)*s2²) / (n1+n2-2))
-
-    This is more appropriate than equal-weight pooling when group
-    sizes differ, and is the standard formula in most textbooks.
-    With n1=71, n2=70 the difference is negligible, but this is
-    the more defensible choice for a reviewer.
     """
     x1, x2 = np.asarray(x1, dtype=float), np.asarray(x2, dtype=float)
     n1, n2 = len(x1), len(x2)
@@ -315,8 +301,6 @@ def summarize(x):
 def phenotype_analysis_stable(X, y, feature_names, feature_indices, config):
     """
     Compare stable features between groups.
-
-    Returns DataFrame with statistical results and confidence tier.
     """
 
     X_subset = X[:, feature_indices]
@@ -392,7 +376,7 @@ def phenotype_analysis_stable(X, y, feature_names, feature_indices, config):
     df = pd.DataFrame(rows)
 
     if len(df) == 0:
-        print("   ⚠️ No features met minimum sample size criteria!")
+        print("    No features met minimum sample size criteria!")
         return df, pd.DataFrame(excluded_features)
 
     # FDR correction
@@ -453,106 +437,6 @@ def analyze_effect_size_threshold(results, config):
 
 
 # ============================================================
-# VISUALIZATION
-# ============================================================
-
-def create_visualizations(results, config):
-    """Create volcano plot and effect size distribution plot with publication names."""
-
-    OUT_DIR = config['output_dir']
-    colors = {'High-dominant': 'red', 'Non-dominant': 'blue', 'Non-discriminating': 'gray'}
-
-    # 1. Volcano Plot
-    print(f"\n   Creating volcano plot...")
-    fig, ax = plt.subplots(figsize=(12, 8))
-
-    results['neg_log_q'] = -np.log10(results['q_value'] + 1e-300)
-
-    for cat in results['category'].unique():
-        subset = results[results['category'] == cat]
-        ax.scatter(subset['cohens_d'], subset['neg_log_q'],
-                   c=colors.get(cat, 'gray'), label=cat, alpha=0.6, s=50)
-
-    ax.axhline(-np.log10(config['alpha']), color='black', linestyle='--',
-               linewidth=1, label=f'q = {config["alpha"]}')
-    ax.axvline(config['effect_size_threshold'], color='red', linestyle=':',
-               linewidth=1, alpha=0.5)
-    ax.axvline(-config['effect_size_threshold'], color='blue', linestyle=':',
-               linewidth=1, alpha=0.5)
-
-    top_features = results.nlargest(5, 'abs_d')
-    for _, row in top_features.iterrows():
-        if row['q_value'] < config['alpha']:
-            ax.annotate(
-                row['feature_publication'],
-                xy=(row['cohens_d'], row['neg_log_q']),
-                xytext=(5, 5), textcoords='offset points',
-                fontsize=8, alpha=0.8
-            )
-
-    ax.set_xlabel("Cohen's d (effect size)", fontsize=12)
-    ax.set_ylabel("-log10(q-value)", fontsize=12)
-    ax.set_title("Volcano Plot: Feature Differences Between Groups", fontsize=14, fontweight='bold')
-    ax.legend(loc='best')
-    ax.grid(alpha=0.3, linestyle='--')
-
-    plt.tight_layout()
-    plt.savefig(OUT_DIR / "volcano_plot.png", dpi=300, bbox_inches='tight')
-    print(f"   Saved: volcano_plot.png")
-    plt.close()
-
-    # 2. Effect Size Distribution
-    print(f"   Creating effect size distribution plot...")
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
-
-    significant = results[results['q_value'] < config['alpha']]
-    if len(significant) > 0:
-        ax1.hist(significant['abs_d'], bins=20, color='steelblue', alpha=0.7, edgecolor='black')
-        ax1.axvline(config['effect_size_threshold'], color='red', linestyle='--',
-                    linewidth=2, label=f'Threshold = {config["effect_size_threshold"]}')
-        ax1.set_xlabel('|Cohen\'s d|', fontsize=12)
-        ax1.set_ylabel('Frequency', fontsize=12)
-        ax1.set_title('Effect Size Distribution\n(Significant Features Only)', fontsize=12, fontweight='bold')
-        ax1.legend()
-        ax1.grid(alpha=0.3, axis='y')
-
-    category_counts = results['category'].value_counts()
-    colors_pie = [colors.get(cat, 'gray') for cat in category_counts.index]
-    ax2.pie(category_counts.values, labels=category_counts.index, autopct='%1.1f%%',
-            colors=colors_pie, startangle=90)
-    ax2.set_title('Feature Category Distribution', fontsize=12, fontweight='bold')
-
-    plt.tight_layout()
-    plt.savefig(OUT_DIR / "effect_size_distribution.png", dpi=300, bbox_inches='tight')
-    print(f"   Saved: effect_size_distribution.png")
-    plt.close()
-
-    # 3. Top Features Bar Plot
-    print(f"   Creating top features comparison plot...")
-    top_n = min(10, len(results))
-    top_feat = results.nsmallest(top_n, 'q_value')
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-
-    y_pos = np.arange(len(top_feat))
-    colors_bar = [colors.get(cat, 'gray') for cat in top_feat['category']]
-
-    ax.barh(y_pos, top_feat['cohens_d'], color=colors_bar, edgecolor='black', linewidth=0.5)
-    ax.set_yticks(y_pos)
-    ax.set_yticklabels(top_feat['feature_publication'], fontsize=9)
-    ax.set_xlabel("Cohen's d", fontsize=11)
-    ax.set_title(f"Top {top_n} Features by Statistical Significance", fontsize=13, fontweight='bold')
-    ax.axvline(0, color='black', linewidth=1)
-    ax.grid(axis='x', alpha=0.3, linestyle='--')
-    ax.invert_yaxis()
-
-    plt.tight_layout()
-    plt.savefig(OUT_DIR / "top_features_comparison.png", dpi=300, bbox_inches='tight')
-    print(f"   Saved: top_features_comparison.png")
-    plt.close()
-
-
-# ============================================================
 # MAIN
 # ============================================================
 
@@ -606,7 +490,7 @@ def main():
             missing_features.append(f)
 
     if missing_features:
-        print(f"   ⚠️ Features not found in dataset: {missing_features}")
+        print(f"    Features not found in dataset: {missing_features}")
 
     print(f"   Stable features loaded: {len(selected_indices)}")
 
@@ -704,10 +588,6 @@ def main():
             f.write("  None\n")
 
     print(f"   Results saved to: {OUT_DIR}")
-
-    # Create visualizations
-    print(f"\n9. Creating visualizations...")
-    create_visualizations(results, CONFIG)
 
     print("\n" + "=" * 70)
     print("ANALYSIS COMPLETE")

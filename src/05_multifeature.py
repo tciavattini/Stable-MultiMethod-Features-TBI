@@ -1,20 +1,9 @@
 """
-4_multifeature_evaluation.py
-============================
 Multi-feature classification evaluation for the stable feature set.
 
 Compares: All features vs Selected features vs Random features
 across SVM, KNN, and Decision Tree classifiers.
 
-CHANGES FROM NOTEBOOK VERSION:
-  - Path updated to stability_analysis
-  - Continuous features loaded from continuous_cols.txt (matches cross_validation.py)
-  - RepeatedStratifiedKFold (10×10 = 100 folds) for stable estimates
-  - Permutation test seed uses CONFIG random_state
-  - Saves all outputs as CSV + publication-ready table + plot
-
-Usage:
-    python 4_multifeature_evaluation.py
 """
 
 import os
@@ -54,7 +43,7 @@ CONFIG = {
 
     # Evaluation parameters
     'n_folds': 10,
-    'n_repeats': 10,            # NEW: repeated CV → 10×10 = 100 folds total
+    'n_repeats': 10,            # repeated CV
     'random_state': 42,
     'n_random_sets': 100,
     'n_bootstrap': 10000,
@@ -569,7 +558,7 @@ def main():
             res_selected['fold_metrics']['accuracy'],
             res_all['fold_metrics']['accuracy']
         )
-        print(f"\n   ▸ Selected vs All:")
+        print(f"\n     Selected vs All:")
         print(f"       Δ accuracy: {comp_all['mean_diff']:+.3f}")
         print(f"       Cohen's d:  {comp_all['cohens_d']:.3f}")
         print(f"       Paired t-test:     p={comp_all['p_ttest']:.4f}")
@@ -580,7 +569,7 @@ def main():
             res_selected['fold_metrics']['accuracy'],
             res_random['averaged_fold_metrics']['accuracy']
         )
-        print(f"\n   ▸ Selected vs Random:")
+        print(f"\n     Selected vs Random:")
         print(f"       Δ accuracy: {comp_random['mean_diff']:+.3f}")
         print(f"       Cohen's d:  {comp_random['cohens_d']:.3f}")
         print(f"       Paired t-test:     p={comp_random['p_ttest']:.4f}")
@@ -588,7 +577,7 @@ def main():
         print(f"       Permutation test:  p={comp_random['p_permutation']:.4f}")
 
         percentile = (res_random['distribution'] < res_selected['accuracy_mean']).mean() * 100
-        print(f"\n   ▸ Selected outperforms {percentile:.1f}% of random sets")
+        print(f"\n     Selected outperforms {percentile:.1f}% of random sets")
 
         comparison_results.extend([
             {'model': model_config['name'], 'comparison': 'Selected vs All', **comp_all},
@@ -713,7 +702,7 @@ Random features ({n_selected}):   {format_ci(svm_rnd['accuracy_mean'], svm_rnd['
 
         plt.xlabel("Number of top-ranked features", fontsize=11)
         plt.ylabel("Accuracy (10×10 repeated CV)", fontsize=11)
-        plt.title("Accuracy vs Number of Selected Features", fontsize=12, fontweight='bold')
+        plt.title(r"Accuracy $\it{vs}$ Number of Selected Features", fontsize=12, fontweight='bold')
 
         plt.ylim(0.4, 0.9)
         plt.grid(True, alpha=0.3)

@@ -1,16 +1,8 @@
 """
-alternative_feature_selection.py
-================================
 LASSO, Elastic Net, and Random Forest feature selection with stability analysis.
 
 Designed to run alongside the existing Vendrow consensus pipeline and produce
 directly comparable results (same data, same resampling, same metrics).
-
-Usage:
-    python alternative_feature_selection.py
-
-Requirements:
-    pip install scikit-learn numpy pandas scipy tqdm
 
 Input:
     - ../data/dataset.csv        (same as cross_validation.py)
@@ -65,7 +57,7 @@ def set_all_seeds(seed):
 
 
 # ============================================================
-# Data loading (mirrors cross_validation.py logic)
+# Data loading
 # ============================================================
 def load_data():
     """Load dataset and labels, convert {1,3} → {0,1}."""
@@ -109,7 +101,7 @@ def load_continuous_idx(feature_names):
 
 
 # ============================================================
-# Imputation (same logic as cross_validation.py)
+# Imputation
 # ============================================================
 def impute_train_test(X_train, X_test, continuous_idx):
     """Impute missing values: median for continuous, mode for categorical.
@@ -273,7 +265,7 @@ def random_forest_feature_importance(X_train, y_train, X_test, continuous_idx, s
 
 
 # ============================================================
-# Stability metrics (same as stability_top30.py)
+# Stability metrics 
 # ============================================================
 def jaccard(a, b):
     a, b = set(a), set(b)
@@ -283,7 +275,7 @@ def jaccard(a, b):
 
 
 def nogueira_stability(topk_lists, p, k=None):
-    """Nogueira et al. (2018) stability index."""
+    """Nogueira stability index."""
     m = len(topk_lists)
     if m < 2:
         return float("nan")
@@ -585,7 +577,7 @@ def main():
         if len(unanimous) > 0:
             print(f"\n  Features selected by ALL 4 methods ({len(unanimous)}):")
             for _, row in unanimous.iterrows():
-                print(f"    • {row['feature_name']}")
+                print(f"    {row['feature_name']}")
         else:
             print("\n  No features selected by all 4 methods.")
 

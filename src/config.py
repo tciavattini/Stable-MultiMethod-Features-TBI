@@ -1,10 +1,3 @@
-"""
-config.py
-=========
-Centralised paths and parameters for the analysis pipeline.
-All scripts import paths from here to ensure consistency.
-"""
-
 from pathlib import Path
 
 # ============================================================
