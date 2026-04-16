@@ -27,9 +27,8 @@ torch.set_num_interop_threads(1)
 
 from scipy import stats
 
-# REMOVED: subsampling no longer used (classes are near-balanced 71 vs 70)
-# 
-from data_loading import get_data, load_feature_names, build_continuous_idx, load_continuous_features
+
+from data_loading import *
 
 from pathlib import Path
 # ============================================================
@@ -69,17 +68,17 @@ from pathlib import Path
 
 # Use absolute path based on script location
 SCRIPT_DIR = Path(__file__).resolve().parent
-CONTINUOUS_FEATURES_PATH = SCRIPT_DIR.parent / "data" / "continuous_cols.txt"
+CONTINUOUS_FEATURES_PATH = SCRIPT_DIR / "../dataset/continuous_cols.txt"
 
 # Check if file exists, provide helpful error
 if not CONTINUOUS_FEATURES_PATH.exists():
     # Try alternative location
-    CONTINUOUS_FEATURES_PATH = SCRIPT_DIR.parent / "data" / "continuous_cols.txt"
+    CONTINUOUS_FEATURES_PATH = SCRIPT_DIR.parent / "dataset" / "continuous_cols.txt"
 
 if not CONTINUOUS_FEATURES_PATH.exists():
     raise FileNotFoundError(
         f"continuous_cols.txt not found. Tried:\n"
-        f"  {SCRIPT_DIR / '../data/continuous_cols.txt'}\n"
+        f"  {SCRIPT_DIR / '../dataset/continuous_cols.txt'}\n"
         f"  {SCRIPT_DIR.parent / 'dataset' / 'continuous_cols.txt'}"
     )
 
