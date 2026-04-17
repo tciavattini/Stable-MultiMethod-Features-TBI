@@ -1,24 +1,5 @@
 """
-fig2_lollipop_stable_features.py
-==================================
-Figure 2 — Main text.
-Lollipop chart of the 22 stable features:
-  x-axis  : Mean Consensus Rank (lower = more important, axis reversed)
-  y-axis  : Feature name (best rank at top)
-  dot size : Fixed (clarity)
-  dot colour : Selection frequency (continuous colormap, 0.70 → 1.00)
-  line colour : Feature domain
-
-INPUT:
-    stable_top_features.csv  — columns:
-        feature_name, mean_consensus_rank, selected_freq (or selection_frequency)
-
-Run:
-    python fig2_lollipop_stable_features.py
-
-Output:
-    figures/lollipop_stable_features.pdf
-    figures/lollipop_stable_features.png
+Figure 3 — Main text.
 """
 
 import numpy as np

@@ -1,28 +1,5 @@
 """
-figS3_rank_stability.py
-========================
-Supplementary Figure S3.
-Three-panel rank stability visualisation derived from stability_top30.py outputs.
-
-Panel A — Pairwise Spearman ρ distribution (all R*(R-1)/2 pairs of seeds)
-Panel B — Selection frequency per feature (sorted), with 70% threshold line
-Panel C — Mean consensus rank vs selection frequency scatter
-           (stable features coloured by domain; unstable in grey)
-
-INPUT (produced by stability_top30.py, stored in results_fe/stability_top30_exp14/):
-    stable_top_features.csv   — selected stable features with freq + mean rank
-    seed_000/ ... seed_099/   — per-seed folders containing consensus rank vectors
-        Each folder has: svm_single.txt, knn_single.txt, net_single.txt,
-                          r2.txt, entropies.txt
-        The script reconstructs S (consensus score) from these five files,
-        OR falls back to loading top{k}_idx.txt if reconstruction is not desired.
-
-Run:
-    python figS3_rank_stability.py
-
-Output:
-    figures/suppfig_rank_stability.pdf
-    figures/suppfig_rank_stability.png
+Supplementary Figure S1.
 """
 
 import numpy as np

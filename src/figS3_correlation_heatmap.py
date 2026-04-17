@@ -1,20 +1,5 @@
 """
-figS1_correlation_heatmap.py
-=============================
-Supplementary Figure S1.
-Pearson correlation heatmap of the 22 stable features.
-
-INPUT:
-    results/multi_feature_evaluation/selected_features_correlation_matrix.csv
-        — produced by 4_multifeature.py (always saved, even if not plotted there)
-    OR (fallback) raw data + stable features CSV to recompute
-
-Run:
-    python figS1_correlation_heatmap.py
-
-Output:
-    figures/suppfig_correlation_heatmap.pdf
-    figures/suppfig_correlation_heatmap.png
+Supplementary Figure S3.
 """
 
 import numpy as np
@@ -35,7 +20,6 @@ STABLE_CSV       = Path("../results_fe/stability_top30_exp14/stable_top_features
 OUT_DIR          = Path("figures")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# Publication-ready short labels (same dict as fig2 — keep in sync)
 LABEL_MAP = {
     "T0_severe_fatigue_rate":       "Severe fatigue severity",
     "num_neurological_symp":        "Neurological symptoms (count)",

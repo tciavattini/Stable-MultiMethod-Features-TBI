@@ -1,9 +1,5 @@
 """
-fig4_violin_phenotype.py
-=========================
-Figure 4 — Main text.
-Violin + strip plot for the 7 FDR-significant stable features,
-comparing high responders vs non-responders.
+Figure 6 — Main text.
 """
 
 import numpy as np

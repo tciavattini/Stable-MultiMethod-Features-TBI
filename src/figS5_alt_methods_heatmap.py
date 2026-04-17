@@ -1,28 +1,5 @@
 """
-figS2_alt_methods_heatmap.py
-=============================
-Supplementary Figure S2.
-Heatmap of AUC values for all alternative feature selection methods
-× classifiers, with Vendrow consensus and full-feature baselines included.
-
-Also adds a side panel showing accuracy gain over random baseline (Cohen's d).
-
-INPUT:
-    results/multi_feature_evaluation/feature_set_comparison.csv
-        — OR — the alternative_fs_classification CSV if you ran that separately.
-        The script accepts either; it looks for a file with columns:
-            method (or feature_set), classifier (or model), auc_mean,
-            accuracy_mean, cohens_d_vs_random (optional)
-
-    If you ran alternative_fs_classification.py the CSV is typically:
-        results/alternative_fs_classification/alt_classification_results.csv
-
-Run:
-    python figS2_alt_methods_heatmap.py
-
-Output:
-    figures/suppfig_alt_methods_heatmap.pdf
-    figures/suppfig_alt_methods_heatmap.png
+Supplementary Figure S5.
 """
 
 import numpy as np
@@ -35,9 +12,6 @@ from pathlib import Path
 OUT_DIR = Path("figures")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# ── hardcoded results (from paper Tables 4 + alt_classification) ──────────────
-# Rows: method | Cols: classifier
-# Paste values from your CSVs if you have them; these match the paper tables.
 
 AUC_DATA = {
     #                       LinearSVM   k-NN    Dec.Tree

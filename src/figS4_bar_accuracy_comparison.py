@@ -1,22 +1,6 @@
 """
-fig3_bar_accuracy_comparison.py
-================================
-Figure 3 — Main text.
-Grouped bar chart comparing accuracy across feature configurations
-and classifiers with 95% bootstrap CI error bars.
+Figure S4 — Supplementary Figure.
 
-INPUT (CSV produced by 4_multifeature.py):
-    results/multi_feature_evaluation/feature_set_comparison.csv
-
-Required columns:
-    model, feature_set, accuracy_mean, accuracy_ci_lower, accuracy_ci_upper
-
-Run:
-    python fig3_bar_accuracy_comparison.py
-
-Output:
-    figures/bar_accuracy_comparison.pdf
-    figures/bar_accuracy_comparison.png
 """
 
 import numpy as np
