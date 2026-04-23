@@ -233,7 +233,7 @@ The data folder contains a CSV file with the following columns:
 
 ```
 .
-├── dataset/            # Anonymised dataset (where applicable)
+├── dataset/            # Anonymised dataset
 ├── src/                # Core pipeline scripts
 ├── figures/            # Figures used in README and paper
 ├── requirements.txt    # Python dependencies
@@ -397,8 +397,8 @@ High responders were characterised by elevated somatic symptom burden (higher fa
 
 ## Licenses
 
-- **Code**: MIT License — see `MIT license` file for details
-- **Dataset**: Creative Commons BY-SA 4.0 — see `CC-BY-SA-4.0 license` file for details
+- **Code**: MIT License — see `LICENSE` file for details
+- **Dataset**: Creative Commons BY-SA 4.0 — see `LICENSE-data` file for details
 
 ---
 
@@ -440,12 +440,3 @@ If you use this repository, please cite the associated manuscript:
   howpublished = {\url{https://github.com/tciavattini/Stable-MultiMethod-Features-TBI}},
 }
 ```
-
----
-
-**Funding.** This project is co-funded by the European Union's Horizon Europe research and innovation programme Cofund SOUND.AI under the Marie Skłodowska-Curie Grant Agreement No 101081674, by Hauts-de-France Region (STIMulE, STIP, DiaLyme), and by the Institut des Sciences du Calcul et des Données (ISCD) of Sorbonne University via the Num4Lyme project.
-
----
-
-**Teresa Ciavattini**  
-Université de Technologie de Compiègne / Sorbonne Université – SCAI
