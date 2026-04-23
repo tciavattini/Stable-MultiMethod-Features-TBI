@@ -94,7 +94,7 @@ The data folder contains a CSV file with the following columns:
 |--------|-------------|
 | `Q15 Bulls Eye` | Bull's eye rash |
 | `Q16. Rash` | Rash |
-| `Q17. Sweats` | Night sweats |
+| `Q17. Sweats` | Sweats |
 | `Q18 Sore throat` | Sore throat |
 | `Q19. Headac` | Headache |
 | `Q20. Swglands` | Swollen glands |
@@ -184,13 +184,13 @@ The data folder contains a CSV file with the following columns:
 **Immunological markers**
 | Column | Description |
 |--------|-------------|
-| `CD3%` | T lymphocyte percentage — reference range 61–84% |
-| `CD3Total` | Total T lymphocyte count — reference range 960–2600 cells/µL |
-| `CD4%` | Helper T cell percentage — reference range 32–60% |
-| `CD4-Helper` | CD4+ Helper T cell count — reference range 540–1600 cells/µL |
-| `CD8%` | Cytotoxic T cell percentage — reference range 13–40% |
-| `CD8-Suppr` | CD8 suppressor count — reference range 270–930 cells/µL |
-| `H/SRATIO` | Helper/suppressor ratio — reference range 0.9–4.5 |
+| `CD3%` | T lymphocyte percentage |
+| `CD3Total` | Total T lymphocyte count |
+| `CD4%` | Helper T cell percentage |
+| `CD4-Helper` | CD4+ Helper T cell count |
+| `CD8%` | Cytotoxic T cell percentage |
+| `CD8-Suppr` | CD8 suppressor count |
+| `H/SRATIO` | Helper/suppressor ratio |
 | `CD19Bcell` | B cell count |
 | `CD19%` | B cell percentage |
 | `CD57+NKCELLS` | CD57+ NK cell count |
@@ -201,17 +201,17 @@ The data folder contains a CSV file with the following columns:
 **Routine haematology and biochemistry**
 | Column | Description |
 |--------|-------------|
-| `HgB` | Haemoglobin — reference range 11.5–16.5 g/dL |
-| `Platelets` | Platelet count — reference range 150–400 ×10⁹/L |
-| `neutrophils` | Neutrophil count — reference range 2–8 ×10⁹/L |
-| `Lymphocytes` | Lymphocyte count — reference range 1–4 ×10⁹/L |
-| `WCC` | White cell count — reference range 3.5–11 ×10⁹/L |
-| `CRP` | C-reactive protein — reference range <7 mg/L |
+| `HgB` | Haemoglobin |
+| `Platelets` | Platelet count |
+| `neutrophils` | Neutrophil count |
+| `Lymphocytes` | Lymphocyte count |
+| `WCC` | White cell count |
+| `CRP` | C-reactive protein |
 | `RF` | Rheumatoid factor |
 | `ANA` | Antinuclear antibodies |
-| `Iron` | Serum iron — reference range 6–33 µmol/L |
-| `Transf` | Transferrin — reference range 1.88–3.02 g/dL |
-| `%transsat` | Transferrin saturation — reference range 19–55% |
+| `Iron` | Serum iron |
+| `Transf` | Transferrin |
+| `%transsat` | Transferrin saturation |
 | `Ferritin` | Serum ferritin |
 | `Folate` | Serum folate |
 | `CK` | Creatine kinase |
@@ -237,7 +237,9 @@ The data folder contains a CSV file with the following columns:
 ├── src/                # Core pipeline scripts
 ├── figures/            # Figures used in README and paper
 ├── requirements.txt    # Python dependencies
-├── LICENSE
+├── environment.yml
+├── MIT license
+├── CC-BY-SA-4.0 license
 └── README.md
 ```
 
@@ -290,7 +292,7 @@ Derives the composite treatment response score from longitudinal changes across 
 ```bash
 python src/03_prepare_data.py
 ```
-Prepares formatted input arrays and stratified train/test splits for downstream modelling.
+Prepares formatted input arrays for downstream modelling.
 
 **Step 4 — Sanity check**
 ```bash
@@ -418,15 +420,13 @@ We welcome questions, suggestions, and contributions. Please open an issue on Gi
 
 5. Nogueira, S., Sechidis, K. & Brown, G. On the stability of feature selection algorithms. *J. Mach. Learn. Res.* 2017, 18, 6345–6398.
 
-6. Hédou, J. et al. Discovery of sparse, reliable omic biomarkers with Stabl. *Nat Biotechnol* 2024, 42, 1581–1593. https://doi.org/10.1038/s41587-023-02033-3
-
 ---
 
 ## Citation
 
 If you use this repository, please cite the associated manuscript:
 
-> Ciavattini T, Shawky M, Padiolleau-Lefèvre S, De Vuyst F, Avramovic G, Lambert JS. *Stability-aware machine learning identifies reproducible baseline predictors of treatment response in tick-borne illness.* Manuscript under submission.
+> Ciavattini T, Shawky M, Padiolleau-Lefèvre S, De Vuyst F, Avramovic G, Lambert JS. *Machine Learning-driven biomarker discovery for stratifying treatment response in tick-borne illness.* Manuscript under submission.
 
 ```bibtex
 @misc{Stable-MultiMethod-Features-TBI,
