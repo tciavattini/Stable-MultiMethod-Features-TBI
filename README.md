@@ -2,19 +2,13 @@
 
 **Teresa Ciavattini, Marc Shawky, Séverine Padiolleau-Lefèvre, Florian De Vuyst, Gordana Avramovic, John Shearer Lambert**
 
-> Ciavattini T et al. *Machine Learning-driven biomarker discovery for stratifying treatment response in tick-borne illness* Manuscript under submission.
+> Ciavattini T et al. *Machine Learning-driven biomarker discovery for stratifying treatment response in tick-borne illness.* Manuscript under submission.
 
 ---
 
 ## Abstract
 
-**Background.** Lyme disease and tick-borne co-infections affect hundreds of thousands of individuals annually, with 10–36% reporting persistent symptoms after antibiotic treatment. Predicting which patients will respond to treatment before therapy begins remains an unsolved problem, as no established baseline predictors exist. A key methodological barrier is that in small clinical datasets, feature selection results are highly sensitive to the choice of algorithm and data partitioning, often producing findings that fail to replicate.
-
-**Methods.** We analysed baseline clinical and laboratory data from 301 patients with tick-borne infections evaluated at a tertiary referral centre. Treatment response was defined using a composite score integrating longitudinal changes across four symptom domains. Patients were stratified into high responders (n=71) and non-responders (n=70) based on extreme tertiles. We applied a resampling-based feature evaluation framework that assessed the stability of discriminative features across five scoring criteria, 100 independent data partitions, and four methodologically distinct selection approaches.
-
-**Results.** 22 baseline features were reproducibly selected across resampling iterations, with five confirmed by all four methods: CD8+ T cells, severe fatigue severity, overall symptom severity, muscle pain severity, and mood severity. Models trained on the stable feature set outperformed those using all 149 features or random subsets of equal size (best AUC: 0.710). High responders were characterised by greater somatic symptom burden at baseline, while non-responders exhibited better mood and self-rated wellbeing.
-
-**Conclusions.** Stability-aware feature evaluation can identify reproducible baseline characteristics that distinguish treatment responders from non-responders in tick-borne illness. If validated in independent cohorts, these findings could inform pre-treatment patient stratification.
+Lyme disease and related tick-borne infections can cause persistent symptoms even after antibiotic treatment. Currently, clinicians cannot reliably predict which patients will respond well to therapy. We analysed clinical and laboratory data from 301 patients collected before treatment. By systematically evaluating 149 patient characteristics across 100 repeated analyses using multiple methods (over 700,000 evaluations), we identified 22 features that consistently distinguished responders from non-responders. Patients who responded well tended to report greater physical symptom burden at baseline, whereas non-responders reported better mood and overall well-being. Five features were consistently identified across all analytical approaches. These findings suggest that baseline symptom and immune profiles may help identify patients more likely to benefit from treatment and support more informed clinical decision-making.
 
 ---
 
@@ -52,82 +46,186 @@ The full analytical pipeline is publicly available to support independent replic
 
 ## Pipeline Overview
 
-The complete analytical workflow is organised into five stages:
-
-1. **Feature engineering** — Raw survey and laboratory data preprocessing, recoding of categorical variables, aggregation into domain-specific symptom counts; yields a final matrix of 149 baseline variables
-2. **Outcome definition and stratification** — Composite treatment response score derived from longitudinal symptom changes across four domains; patients stratified by extreme tertiles into high responders (n=71) and non-responders (n=70); middle tertile excluded (n=70)
-3. **Resampling-based single-feature evaluation** — Each of the 149 features assessed across five scoring criteria (Linear SVM, k-NN, neural network, Linear Regression R², information gain), 100 independent iterations of 10 × 80/20 stratified splits; consensus ranking; stable feature identification at ≥70% selection frequency
-4. **Multi-feature classification** — Stable feature set compared against full-feature and random baselines using three classifiers (Linear SVM, k-NN, Decision Tree) under 10×10 repeated stratified cross-validation
-5. **Phenotypic characterisation** — Univariate between-group differences assessed via Mann–Whitney U tests with Benjamini–Hochberg FDR correction
-
 ![Pipeline overview](figures/main/pipeline_workflow.jpg)
 
 ---
 
 ## Data
 
-Due to privacy and ethical restrictions associated with clinical data, the full original dataset is not publicly released. The repository includes all preprocessing, feature selection, modelling, and figure generation code. Anonymised data files are provided only in accordance with applicable data-sharing constraints.
-
-### Study Cohort
-
-The dataset comprises 301 patients with tick-borne infections evaluated at the Mater Misericordiae University Hospital (Dublin, Ireland). Diagnostic evaluation included TICKPLEX® ELISA serological testing for *Borrelia burgdorferi* sensu lato, *Babesia microti*, *Bartonella henselae*, *Ehrlichia chaffeensis*, and *Rickettsia akari*. Of 301 patients, 140 (46.5%) were seropositive; the remainder were clinically diagnosed based on compatible presentation and exposure history. The final analytic cohort comprised 141 patients (high responders n=71, non-responders n=70) after exclusion of 90 patients with insufficient outcome data.
-
-**Ethical approval:** IRB reference 1/378/1946, Mater Misericordiae University Hospital. All participants provided written informed consent. The study was conducted in accordance with the Declaration of Helsinki.
-
-### Variable Categories
-
-Patients completed anonymised self-reported surveys at baseline (T0, pre-treatment) and follow-up (T2, approximately six months post-treatment). The final baseline feature matrix contains **149 variables** across the following categories:
+The data folder contains a CSV file with the following columns:
 
 **Demographics and disease history**
-- `Age`: Patient age at baseline
-- `Gender`: Patient sex (F / M)
-- `Tick bite history`: Binary
-- `Time since tick bite (months)`
-- `Previous chronic symptoms`: Binary
-- `Prior antibiotic treatment`: Binary; prior antibiotic duration (weeks)
-- `Employment status`
+| Column | Description |
+|--------|-------------|
+| `age` | Patient age at baseline |
+| `gender` | Patient sex |
+| `persistent` | Persistent symptom status |
+| `Q1_Residence_Ireland` | Residence in Ireland |
+| `Q2_residence_outside_Ireland` | Residence outside Ireland |
+| `Q3_Outdoor_hobbies` | Outdoor hobbies (tick exposure risk) |
+| `Q4_Chronic_previous` | Previous chronic conditions |
+| `Q5_tick_bite` | History of tick bite |
+| `Q6_tick_bite_when` | Time of tick bite |
+| `Q8_Interval` | Interval since tick bite |
 
-**Self-reported symptom severity (1–10 numeric rating scales)**
-- `Severe fatigue severity` — burden scale (lower = better)
-- `Muscle pain severity` — burden scale (lower = better)
-- `Overall symptom severity` — well-being scale (higher = better)
-- `Mood severity` — well-being scale (higher = better)
-- `Total number of symptoms`
-- Domain-specific symptom counts: neurological, musculoskeletal, autonomic, and other symptom domains (individual items and aggregated counts)
+**Healthcare access and satisfaction**
+| Column | Description |
+|--------|-------------|
+| `Q9_GP` | GP consultations |
+| `Q9a_GP_satisfaction` | GP satisfaction rating |
+| `Q10_Consultant` | Specialist consultations |
+| `Q10a_consultant_satisfaction` | Consultant satisfaction rating |
+| `Q11_Number_doc` | Number of doctors consulted |
+| `Q12_trt_care_rate` | Treatment and care rating |
+
+**Employment status**
+| Column | Description |
+|--------|-------------|
+| `Working` | Currently working |
+| `Sick Leave` | On sick leave |
+| `Retired` | Retired |
+| `Caring res` | Caring responsibilities |
+| `Unemplo` | Unemployed |
+| `Other_empl` | Other employment status |
+| `Q14_Impact_symp_employment` | Impact of symptoms on employment |
+
+**Baseline symptom burden (binary presence/absence)**
+| Column | Description |
+|--------|-------------|
+| `Q15 Bulls Eye` | Bull's eye rash |
+| `Q16. Rash` | Rash |
+| `Q17. Sweats` | Night sweats |
+| `Q18 Sore throat` | Sore throat |
+| `Q19. Headac` | Headache |
+| `Q20. Swglands` | Swollen glands |
+| `Q21. Sev Fat` | Severe fatigue |
+| `Q24. Chest P.` | Chest pain |
+| `Q25. ShortB` | Shortness of breath |
+| `Q26. Palpit` | Palpitations |
+| `Q27. Lighthead.` | Lightheadedness |
+| `Q28. JointP` | Joint pain |
+| `Q29.Moving` | Pain on moving |
+| `Q30. Intensity` | Pain intensity |
+| `Q31. JointSw` | Joint swelling |
+| `Q32. MuscW.le` | Muscle weakness |
+| `Q33.MuscP` | Muscle pain |
+| `Q35Facial` | Facial symptoms |
+| `Q36ArmHan` | Arm/hand symptoms |
+| `Q37Numbn` | Numbness |
+| `Q38Concen` | Concentration difficulties |
+| `Q39Sleep` | Sleep disturbance |
+| `Q40Vision` | Vision problems |
+| `Q41. Neck` | Neck stiffness |
+| `Q42Tinnit` | Tinnitus |
+| `Q43Person` | Personality changes |
+| `Q44Mood` | Mood changes |
+| `Q46Anger` | Anger |
+| `Q47Anxiety` | Anxiety |
+
+**Baseline symptom severity scores (1–10 numeric rating scales)**
+| Column | Description |
+|--------|-------------|
+| `T0_severe_fatigue_rate` | Fatigue severity — burden scale (lower = better) |
+| `T0_muscle_pain_rate` | Muscle pain severity — burden scale (lower = better) |
+| `T0_symp_today_rate` | Overall symptom severity — well-being scale (higher = better) |
+| `T0_mood_rate` | Mood severity — well-being scale (higher = better) |
+
+**Treatment history**
+| Column | Description |
+|--------|-------------|
+| `Q48_blood_analysis` | Blood analysis performed |
+| `Q49_blood_analysis_where` | Location of blood analysis |
+| `Q50_antibiotic` | Prior antibiotic use |
+| `Q52_antib_duration` | Prior antibiotic duration |
+| `Q53_antib_symp_improv` | Symptom improvement with prior antibiotics |
+| `Q54_alternative_trt` | Alternative treatments used |
+| `Q55_alternative_trt_success` | Success of alternative treatments |
+
+**Treatment doses (study regimen)**
+| Column | Description |
+|--------|-------------|
+| `Cefuroxime_dose` | Cefuroxime dose |
+| `Rifampicin_dose` | Rifampicin dose |
+| `Lymecyclin_dose` | Lymecycline dose |
+| `Azithromycin_dose` | Azithromycin dose |
+| `Clarithromycin_dose` | Clarithromycin dose |
+| `Doxycycline_dose` | Doxycycline dose |
+| `Amoxicillin_dose` | Amoxicillin dose |
+| `LDN_dose` | Low-dose naltrexone dose |
+| `Melatonin_dose` | Melatonin dose |
+| `Valoid_dose` | Valoid dose |
+| `Malarone_dose` | Malarone dose |
+| `Diflucan_dose` | Diflucan dose |
+
+**Serological profile (TICKPLEX® ELISA)**
+| Column | Description |
+|--------|-------------|
+| `b.burg+afz+gar.IgG` / `IgM` | *Borrelia burgdorferi* s.l. IgG/IgM |
+| `B.Burg Round Body IgG` / `IgM` | *B. burgdorferi* round body IgG/IgM |
+| `BaB M IgG` / `IgM` | *Babesia microti* IgG/IgM |
+| `Bart H IgG` / `IgM` | *Bartonella henselae* IgG/IgM |
+| `Ehrl C IgG` / `IgM` | *Ehrlichia chaffeensis* IgG/IgM |
+| `Rick Ak IgG` / `IgM` | *Rickettsia akari* IgG/IgM |
+| `Coxs IgG` / `IgM` | Coxsackievirus IgG/IgM |
+| `Epst B IgG` / `IgM` | Epstein–Barr virus IgG/IgM |
+| `Hum Par IgG` / `IgM` | Human parvovirus IgG/IgM |
+| `Mycop Pneu IgG` / `IgM` | *Mycoplasma pneumoniae* IgG/IgM |
+| `Chlamydia pneumoni` | *Chlamydia pneumoniae* |
+| `HSV / IgG`, `HSV/1gG` | Herpes simplex virus IgG |
+| `VZV/ IgG` | Varicella-zoster virus IgG |
+| `Toxoplasma` | *Toxoplasma gondii* |
+| `Yersinia`, `Yersinia.1` | *Yersinia* spp. |
+| `BB Full Anti`, `BB Osp Mix`, `BBLFA` | *Borrelia* full antigen / OspMix / LFA panels |
+| `Babesia`, `Bartonella H`, `Myco Pne`, `Ehrl Ana` | Composite seropositivity flags |
+| `Rickettsia`, `Epstein B`, `Chlamydia P`, `Chlamyd trac` | Composite seropositivity flags |
+| `Cytomigalo`, `VZV IgG`, `Anaplasma Phago`, `Herpes Simplex` | Composite seropositivity flags |
+| `Aspergillas`, `Candida`, `NVRLIgG` | Fungal and reference lab flags |
 
 **Immunological markers**
-- `CD3%`: T lymphocyte percentage — reference range 61–84%
-- `CD3 Total`: Total T lymphocyte count — reference range 960–2600 cells/µL
-- `CD4%`: Helper T cell percentage — reference range 32–60%
-- `CD4-Helper`: CD4+ Helper T cell count — reference range 540–1600 cells/µL
-- `CD8%`: Cytotoxic T cell percentage — reference range 13–40%
-- `CD8-Suppr`: CD8 suppressor count — reference range 270–930 cells/µL
-- `H/S ratio`: Helper/suppressor ratio — reference range 0.9–4.5
-- NK cells, B cells (CD19+), IgM
+| Column | Description |
+|--------|-------------|
+| `CD3%` | T lymphocyte percentage — reference range 61–84% |
+| `CD3Total` | Total T lymphocyte count — reference range 960–2600 cells/µL |
+| `CD4%` | Helper T cell percentage — reference range 32–60% |
+| `CD4-Helper` | CD4+ Helper T cell count — reference range 540–1600 cells/µL |
+| `CD8%` | Cytotoxic T cell percentage — reference range 13–40% |
+| `CD8-Suppr` | CD8 suppressor count — reference range 270–930 cells/µL |
+| `H/SRATIO` | Helper/suppressor ratio — reference range 0.9–4.5 |
+| `CD19Bcell` | B cell count |
+| `CD19%` | B cell percentage |
+| `CD57+NKCELLS` | CD57+ NK cell count |
+| `IgG` | Immunoglobulin G |
+| `IgA` | Immunoglobulin A |
+| `IgM` | Immunoglobulin M |
 
 **Routine haematology and biochemistry**
-- `HgB`: Haemoglobin — reference range 11.5–16.5 g/dL
-- `Platelets`: Platelet count — reference range 150–400 ×10⁹/L
-- `Neutrophils`: Neutrophil count — reference range 2–8 ×10⁹/L
-- `Lymphocytes`: Lymphocyte count — reference range 1–4 ×10⁹/L
-- `WCC`: White cell count — reference range 3.5–11 ×10⁹/L
-- `CRP`: C-reactive protein — reference range <7 mg/L
-- `Iron`: Serum iron — reference range 6–33 µmol/L
-- `Transf`: Transferrin — reference range 1.88–3.02 g/dL
-- `%Trans sat`: Transferrin saturation — reference range 19–55%
-- `Ferritin`, `Folate`, `TSH`, `Rheumatoid factor`
+| Column | Description |
+|--------|-------------|
+| `HgB` | Haemoglobin — reference range 11.5–16.5 g/dL |
+| `Platelets` | Platelet count — reference range 150–400 ×10⁹/L |
+| `neutrophils` | Neutrophil count — reference range 2–8 ×10⁹/L |
+| `Lymphocytes` | Lymphocyte count — reference range 1–4 ×10⁹/L |
+| `WCC` | White cell count — reference range 3.5–11 ×10⁹/L |
+| `CRP` | C-reactive protein — reference range <7 mg/L |
+| `RF` | Rheumatoid factor |
+| `ANA` | Antinuclear antibodies |
+| `Iron` | Serum iron — reference range 6–33 µmol/L |
+| `Transf` | Transferrin — reference range 1.88–3.02 g/dL |
+| `%transsat` | Transferrin saturation — reference range 19–55% |
+| `Ferritin` | Serum ferritin |
+| `Folate` | Serum folate |
+| `CK` | Creatine kinase |
+| `FT4` | Free thyroxine |
+| `TSH` | Thyroid-stimulating hormone |
 
-**Serological profile**
-- Number of positive markers; number of serological tests performed
-- Pathogen-specific seropositivity: *B. burgdorferi*, *Babesia*, *Bartonella*, *Ehrlichia*, *Rickettsia*
+**Outcome variables (T2 follow-up — not used as baseline features)**
+| Column | Description |
+|--------|-------------|
+| `T2_symp_today_rate` | Overall symptom severity at T2 |
+| `T2_muscle_pain_rate` | Muscle pain severity at T2 |
+| `T2_severe_fatigue_rate` | Fatigue severity at T2 |
+| `T2_mood_rate` | Mood severity at T2 |
 
-### Preprocessing
-
-All preprocessing was performed within each resampling split using training-fold statistics only, to prevent information leakage:
-- Missing values imputed using the median (continuous) or mode (categorical) computed from the training partition
-- Continuous features standardised to zero mean and unit variance; applied identically to the test fold
-- Categorical and binary features were not scaled
-- Overall missingness across 149 features: 7.13% (median 3.5% per feature)
 
 ---
 
