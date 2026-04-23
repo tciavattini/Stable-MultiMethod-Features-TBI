@@ -1,0 +1,29 @@
+name: Stable-MultiMethod-Features-TBI
+channels:
+  - conda-forge
+  - https://repo.anaconda.com/pkgs/main
+  - https://repo.anaconda.com/pkgs/r
+dependencies:
+  - numpy=1.26.4
+  - pandas=2.2.2
+  - python=3.10.13
+  - matplotlib=3.9.2
+  - seaborn=0.13.2
+  - notebook=7.2.2
+  - scikit-learn=1.5.1
+  - missingno=0.5.2
+  - texlive-core
+  - openpyxl
+  - feature_engine
+  - xlsxwriter
+  - umap-learn
+  - plotly
+  - python-docx
+  - ace
+  - acstools
+  - ipynb-py-convert
+  - pyarrow
+  - fastparquet
+  - imbalanced-learn
+  - xgboost
+prefix: /Users/miniconda3/envs/Stable-MultiMethod-Features-TBI
