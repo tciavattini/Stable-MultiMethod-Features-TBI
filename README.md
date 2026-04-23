@@ -29,11 +29,11 @@ The full workflow includes:
 5. Model training (RF, SVM, Logistic Regression, KNN)
 6. Performance evaluation with cross-validation
 
-![Pipeline overview](figures/main/fig_1.pdf)
+![Pipeline overview](figures/main/pipeline_workflow.jpg)
 
 ## Main Result
 
-![Stable features](figures/main/fig_3.pdf)
+![Stable features](figures/main/stable_features.jpg)
 
 
 ---
