@@ -32,7 +32,7 @@ Lyme disease and related tick-borne infections can cause persistent symptoms eve
 
 ## Introduction
 
-Lyme disease and associated tick-borne co-infections represent a growing public health burden, with an estimated 500,000 new cases per year in the United States and comparable incidence across endemic European regions. While antibiotic therapy is effective for most patients, 10% to 36% report persistent or recurring symptoms following treatment — including severe fatigue, musculoskeletal pain, neurological dysfunction, and impaired mood — a condition formally classified as post-treatment Lyme disease syndrome (PTLDS).
+Lyme disease and associated tick-borne co-infections represent a growing public health burden, with an estimated 500,000 new cases per year in the United States and comparable incidence across endemic European regions. While antibiotic therapy is effective for most patients, 10% to 36% report persistent or recurring symptoms following treatment, including severe fatigue, musculoskeletal pain, neurological dysfunction, and impaired mood, a condition formally classified as post-treatment Lyme disease syndrome (PTLDS).
 
 The inability to identify at baseline which patients are likely to respond to treatment remains an unsolved clinical problem. Patients unlikely to respond might benefit from earlier escalation; likely responders could be spared unnecessary intensification. Machine learning offers advantages over conventional univariate or stepwise approaches for identifying such discriminators, as it can evaluate multiple candidate features simultaneously while accounting for their interactions.
 
