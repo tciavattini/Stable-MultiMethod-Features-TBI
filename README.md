@@ -2,6 +2,9 @@
 
 > Reproducible machine learning pipeline for identifying stable and clinically relevant predictors of treatment response in heterogeneous patient cohorts.
 
+# Abstract
+Lyme disease and related tick-borne infections can cause persistent symptoms even after antibiotic treatment. Currently, clinicians cannot reliably predict which patients will respond well to therapy. We analysed clinical and laboratory data from 301 patients collected before treatment. By systematically evaluating 149 patient characteristics across 100 repeated analyses using multiple methods (over 700,000 evaluations), we identified 22 features that consistently distinguished responders from non-responders. Patients who responded well tended to report greater physical symptom burden at baseline, whereas non-responders reported better mood and overall well-being. Five features were consistently identified across all analytical approaches. These findings suggest that baseline symptom and immune profiles may help identify patients more likely to benefit from treatment and support more informed clinical decision-making.
+
 ---
 
 ## Overview
@@ -87,15 +90,7 @@ python src/04_stability_top30.py
 # to run cross_validation you need the files data_loading.py and stability_top30
 
 python src/05_multifeature.py
-# multifeature analysis. In the code it's present also the code to generate
-# figure 4b, and table S11 with the name statistical_comparison.csv,
-# file publication_table.csv used for table 2 of main paper,
-# feature_count_analysis is table S10 from supplementary
-
 python src/06_alt_feature_selection.py
-# feature selection with three alternative methods,
-# outputs features from those three methods, also combined
-
 python src/07_alt_fs_classification.py
 python src/08_phenotype_analysis.py
 python src/09_sensitivity_analyses.py
@@ -153,7 +148,8 @@ If you use this repository, please cite the associated manuscript:
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+- Code is licensed under the MIT License (see `MIT license`)
+- Dataset is licensed under CC BY-SA 4.0 (see `CC-BY-SA-4.0 license`)
 
 ---
 
@@ -162,3 +158,19 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 **Teresa Ciavattini**
 Sorbonne Université / SCAI – Sorbonne Center for Artificial Intelligence
 Université de Technologie de Compiègne
+
+# Dataset Description
+
+This dataset contains anonymized clinical variables used in the study.
+
+## Content
+- Baseline biomarkers
+- Clinical symptoms
+- Outcome variables
+
+## Preprocessing
+- Missing values handled via imputation
+- Standardization applied
+
+## Privacy
+All data have been anonymized and do not contain personally identifiable information.
